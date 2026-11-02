@@ -1,0 +1,1 @@
+function o(t,e,n,a=0,T=0,i=0){return Date.UTC(t,e,n,a,T,i)-252e5}function S(t=new Date){const e=new Date(t.getTime()+252e5);e.setUTCMonth(e.getUTCMonth()+1);const n=e.getUTCDay();return e.setUTCDate(e.getUTCDate()+((6-n+7)%7||7)),e.toISOString().slice(0,10)}function s(t=new Date){return new Date(t.getTime()+252e5).toISOString().slice(0,10)}export{S as d,s as v,o as w};

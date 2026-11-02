@@ -1,0 +1,1 @@
+import{a,c as e}from"./config-B8ccdOKb.js";import{b as i}from"./routes-DWPhed5C.js";import"./cookie-consent-B_XkIsJt.js";function c(t){return/^\/i\/[^/]+(\/[^/]+)?$/.test(t)}const s=new Set(a.map(t=>i("templates",t)).filter(t=>!!t));function l(t){return s.has(t)}const n=new Set(Object.values(e).filter(t=>t!==""));function P(t){return n.has(t)}export{l as a,c as b,P as i};

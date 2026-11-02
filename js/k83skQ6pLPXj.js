@@ -1,0 +1,1 @@
+import{r}from"./template-editor-features-Djp-tmpN.js";let a=[];function l(e){e.length!==0&&(a=e)}const o="wedding";function u(e,t){if(!e)return a;const n=t?.occasion??o;return a.filter(c=>t?.allOccasions||s(c)===n)}function s(e){return e.occasion??o}function f(e){const t=r(e);return a.find(n=>n.slug===t)}export{u as a,f as g,l as h,s as t};

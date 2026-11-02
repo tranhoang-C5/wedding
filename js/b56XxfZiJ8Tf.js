@@ -1,0 +1,1 @@
+function i(t){return`invitation-draft:${t}`}function e(t){return`invitation-template:${t}`}function a(t){return`invitation-title:${t}`}const n="local-invitations-changed";function o(){typeof window>"u"||window.dispatchEvent(new Event(n))}export{n as L,e as a,a as b,i as g,o as n};

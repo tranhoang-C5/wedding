@@ -1,0 +1,1 @@
+const o=["nha-hang-tiec-cuoi","tiem-in-thiep-cuoi","du-tru-chi-phi-cuoi","giam-dung-luong-anh","giam-dung-luong-video","xoa-nen-anh","thay-doi-kich-thuoc-anh"],c="coming-soon-";function u(i){const n=i.replace(/^\/+|\/+$/g,"");return o.includes(n)?n:o[0]}export{c as C,u as c};

@@ -1,0 +1,1 @@
+function a(t,n){if(typeof window>"u")return;const e={event:t,...n};window.gtag?.("event",t,n),window.dispatchEvent(new CustomEvent("analytics",{detail:e}))}function i(t){typeof window>"u"||window.gtag?.("event","page_view",{page_path:t,page_location:window.location?.href,page_title:window.document?.title})}export{i as a,a as t};
