@@ -51,7 +51,7 @@
   }
 
   var PHOTOS = [
-    "7WGR5Eq8SNnJ.jpg", "0mmzr4hn5pP9.jpg", "PE2nerv0WwS5.jpg", "12M25DTn3dBH.jpg", "AFnZj0BYNdpU.jpg"
+    "JPEG/DSC09129.jpg", "JPEG/DSC08838.jpg", "JPEG/DSC08362.jpg", "JPEG/DSC08219.jpg", "AFnZj0BYNdpU.jpg"
   ].map(function (f) { return "images/" + f; });
 
   function initGallery() {
