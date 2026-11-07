@@ -413,7 +413,7 @@
                         style="color:#3a312c;font-family:&quot;EB Garamond&quot;, &quot;Times New Roman&quot;, serif">
                         9H00</p>
                       <p class="mt-1 whitespace-pre-line text-[14px] leading-snug first-letter:uppercase"
-                        style="color:#7d6c6c"><span dir="auto">Lễ Vu quy</span></p>
+                        style="color:#7d6c6c"><span dir="auto">Lễ Vu Quy</span></p>
                     </div>
                   </li>
                   <li class="relative grid grid-cols-[64%_1fr] items-center">
@@ -708,6 +708,72 @@
   <!--$-->
   <script>window.__reactRouterContext.streamController.close();</script><!--/$--><!--/$-->
   <script src="js/open-invite.js?v=8"></script>
+  <style>
+    .mw-wave { position: absolute; inset: 0; display: none; align-items: flex-end; justify-content: center;         gap: 2px; padding-bottom: 17px; pointer-events: none; }
+        .mw-wave i { width: 4px; height: 14px; border-radius: 2px; background: #fff; transform-origin: bottom; transform: scaleY(.3); animation: mw-bounce 0.9s ease-in-out infinite; }
+    .mw-wave i:nth-child(2) { animation-delay: -.6s; }
+    .mw-wave i:nth-child(3) { animation-delay: -.3s; }
+    .mw-wave i:nth-child(4) { animation-delay: -.45s; }
+    @keyframes mw-bounce { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+    .mw-playing .mw-wave { display: flex; }
+    .mw-playing button[aria-label] svg { opacity: 0; }
+  </style>
+  <script>
+    (function () {
+      function init() {
+      var audio = document.querySelector('audio');
+      var box = document.querySelector('.fixed.bottom-14.right-4');
+      if (audio && box && !box.querySelector('.mw-wave')) {
+        box.style.position = 'fixed';
+        var wave = document.createElement('div');
+        wave.className = 'mw-wave';
+        wave.innerHTML = '<i></i><i></i><i></i><i></i>';
+        var btn = box.querySelector('button');
+        btn.appendChild(wave);
+        var sync = function () { box.classList.toggle('mw-playing', !audio.paused); };
+        audio.addEventListener('play', sync);
+        audio.addEventListener('playing', sync);
+        audio.addEventListener('pause', sync);
+        audio.addEventListener('ended', sync);
+        sync();
+      }
+      }
+      window.addEventListener('load', function () { setTimeout(init, 1500); });
+
+      // Nhẹ nhàng cuộn xuống sau khi bấm "Mở thiệp"
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.pst-open-btn')) return;
+        if (autoScrollStarted) return;
+        autoScrollStarted = true;
+        setTimeout(startAutoScroll, 700);
+      });
+
+      var autoScrollStarted = false;
+      var SPEED = 40;      // px mỗi giây
+      var IDLE_MS = 5000;  // dừng bao lâu sau khi người dùng chạm vào thì cuộn tiếp
+      function startAutoScroll() {
+        var lastInteract = 0, pos = window.scrollY, last = null;
+        ['wheel', 'touchstart', 'mousedown', 'keydown'].forEach(function (ev) {
+          window.addEventListener(ev, function () { lastInteract = performance.now(); }, { passive: true });
+        });
+        function step(ts) {
+          if (last !== null && ts - lastInteract >= IDLE_MS) {
+            // người dùng vừa tự cuộn xong thì tiếp tục từ vị trí hiện tại
+            if (Math.abs(window.scrollY - Math.round(pos)) > 2) pos = window.scrollY;
+            var max = document.documentElement.scrollHeight - window.innerHeight;
+            if (pos >= max - 1) return;
+            pos = Math.min(pos + SPEED * (ts - last) / 1000, max);
+            window.scrollTo(0, pos);
+          } else {
+            pos = window.scrollY;
+          }
+          last = ts;
+          requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+    })();
+  </script>
 </body>
 
 </html>
