@@ -7,6 +7,7 @@
   var audio = document.querySelector("audio");
   var musicBtn = document.querySelector('button[aria-label="Phát nhạc"], button[aria-label="Tắt nhạc"]');
   var ACCENT = getComputedStyle(btn).backgroundColor || "#7d1a1a";
+  var SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzahKocoj8sotTwp5l8_WpLLTeDNBDaDzpuZG9xDd7QA-8WCaXdMwdWNgddDIbIq0BXyw/exec";
 
   var reveals = document.querySelectorAll("." + P + "-reveal");
   var observer = null;
@@ -51,7 +52,7 @@
   }
 
   var PHOTOS = [
-    "JPEG/DSC09129.jpg", "JPEG/DSC08838.jpg", "JPEG/DSC08362.jpg", "JPEG/DSC08219.jpg", "AFnZj0BYNdpU.jpg"
+    "JPEG/DSC09129.jpg", "JPEG/DSC08838.jpg", "JPEG/DSC08362.jpg", "JPEG/DSC08219.jpg", "JPEG/DSC08242.jpg"
   ].map(function (f) { return "images/" + f; });
 
   function initGallery() {
@@ -119,10 +120,9 @@
     });
   }
 
-  // Thông tin mừng cưới mẫu - thay bằng thông tin thật (và đổi ảnh QR trong images/)
   var GIFTS = [
-    { who: "Chú Rể - THIEP DEMO", qr: "images/qr-groom.png", bank: "VietinBank", number: "0000000000", name: "THIEP DEMO" },
-    { who: "Cô Dâu - THIEP DEMO", qr: "images/qr-bride.png", bank: "VietinBank", number: "0000000000", name: "THIEP DEMO" }
+    { who: "Chú rể", qr: "images/qr-groom.png", bank: "VietcomBank", number: "9359365456", name: "TRAN HOANG" },
+    { who: "Cô dâu", qr: "images/qr-bride.png", bank: "TechcomBank", number: "19036271478017", name: "CAO KHANH LINH" }
   ];
 
   function initGift() {
@@ -136,7 +136,7 @@
       '<button type="button" data-close aria-label="Đóng" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;font-size:20px;cursor:pointer">✕</button></div>' +
       '<div style="display:flex;justify-content:center;gap:20px;padding:24px 12px 20px">';
     GIFTS.forEach(function (g) {
-      html += '<div style="flex:1;text-align:center;min-width:0"><div style="font-size:13px;margin-bottom:16px">' + g.who + '</div>' +
+      html += '<div style="flex:1;text-align:center;min-width:0;font-family:\'Montserrat\',\'Segoe UI\',sans-serif;font-weight:500"><div style="font-size:13px;margin-bottom:16px">' + g.who + '</div>' +
         '<div style="width:min(160px,100%);aspect-ratio:1;margin:0 auto;border-radius:16px;border:2px solid #eee;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;background:#fff"><img src="' + g.qr + '" alt="QR ' + g.who + '" style="width:82%;height:82%;object-fit:contain"></div>' +
         '<div style="font-size:10px;margin-top:12px">' + g.bank + '</div><div style="font-size:10px;margin-top:2px;letter-spacing:.05em">' + g.number + '</div>' +
         '<div style="font-size:11px;font-weight:600;margin-top:4px">' + g.name + '</div>' +
@@ -215,6 +215,7 @@
       '<p class="rsvp-description">Sự hiện diện của bạn là niềm vinh hạnh cho gia đình chúng tôi. Xin xác nhận để chúng tôi chuẩn bị chu đáo nhất.</p>' +
       '<form>' +
       '<label class="rsvp-name">Tên của bạn<input name="guestName" type="text" autocomplete="off" maxlength="120" placeholder="Nhập tên của bạn" required></label>' +
+      '<label class="rsvp-name">Số người tham dự<input name="attendeeCount" type="number" min="1" step="1" value="1" required></label>' +
       '<fieldset style="border:0;margin:0;padding:0"><legend class="rsvp-legend">Bạn sẽ đến chứ?</legend>' +
       '<label class="rsvp-choice"><input type="radio" name="attendance" value="yes" checked><span class="rsvp-choice-icon" aria-hidden="true">✓</span><span>Tôi sẽ đến</span></label>' +
       '<label class="rsvp-choice"><input type="radio" name="attendance" value="no"><span class="rsvp-choice-icon" aria-hidden="true">×</span><span>Rất tiếc, tôi không thể đến</span></label>' +
@@ -226,35 +227,121 @@
 
     var form = dialog.querySelector("form");
     var nameInput = form.querySelector('input[name="guestName"]');
+    var countInput = form.querySelector('input[name="attendeeCount"]');
     var submit = form.querySelector(".rsvp-submit");
     var status = dialog.querySelector(".rsvp-status");
     function updateSubmitState() {
-      submit.disabled = nameInput.value.trim().length === 0;
+      var attending = form.querySelector('input[name="attendance"]:checked').value === "yes";
+      countInput.disabled = !attending;
+      var count = Number(countInput.value);
+      submit.disabled = nameInput.value.trim().length === 0 ||
+        (attending && (!Number.isInteger(count) || count < 1));
     }
     trigger.addEventListener("click", function () {
       form.reset();
       nameInput.value = "";
+      countInput.value = "1";
       form.querySelector('input[value="yes"]').checked = true;
       updateSubmitState();
       status.hidden = true;
       if (!dialog.open) dialog.showModal();
     });
     nameInput.addEventListener("input", updateSubmitState);
+    countInput.addEventListener("input", updateSubmitState);
+    form.querySelectorAll('input[name="attendance"]').forEach(function (input) {
+      input.addEventListener("change", updateSubmitState);
+    });
     dialog.querySelector(".rsvp-close").addEventListener("click", function () { dialog.close(); });
     dialog.addEventListener("click", function (event) {
       if (event.target === dialog) dialog.close();
     });
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      status.textContent = "Đây là bản xem thử; phản hồi chưa được gửi đến cô dâu chú rể.";
+      var attending = form.querySelector('input[name="attendance"]:checked').value === "yes";
+      submit.disabled = true;
+      status.textContent = "Đang gửi xác nhận...";
       status.hidden = false;
+      sendToSheet({
+        loai: "rsvp",
+        ho_ten: nameInput.value.trim(),
+        so_nguoi: attending ? Number(countInput.value) : 0,
+        ghi_chu: attending ? "Xác nhận tham dự" : "Không thể tham dự"
+      }).then(function () {
+        status.textContent = "Yêu cầu xác nhận đã được gửi đi. Cảm ơn bạn!";
+        form.reset();
+        nameInput.value = "";
+        countInput.value = "1";
+        form.querySelector('input[value="yes"]').checked = true;
+        updateSubmitState();
+      }).catch(function (error) {
+        console.error("Không gửi được xác nhận đến Google Sheets:", error);
+        status.textContent = "Gửi chưa thành công. Vui lòng kiểm tra kết nối và thử lại.";
+        updateSubmitState();
+      });
     });
+  }
+
+  function sendToSheet(data) {
+    return fetch(SHEET_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=UTF-8" },
+      body: JSON.stringify(data)
+    });
+  }
+
+  function initGuestbook() {
+    var section = document.querySelector('[data-landing-screenshot-id="invite-guestbook"]');
+    var form = section && section.querySelector("form");
+    if (!form) return;
+
+    var nameInput = form.querySelector('input[type="text"]');
+    var wishInput = form.querySelector("textarea");
+    var submit = form.querySelector('button[type="submit"]');
+    var status = document.createElement("p");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    status.hidden = true;
+    status.style.cssText = "margin:8px 0 0;color:#7d6c6c;font-size:13px;text-align:center";
+    form.insertAdjacentElement("afterend", status);
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (form.dataset.sending === "true") return;
+      if (!nameInput.value.trim() || !wishInput.value.trim()) {
+        status.textContent = "Vui lòng nhập tên và lời chúc.";
+        status.hidden = false;
+        return;
+      }
+
+      form.dataset.sending = "true";
+      submit.disabled = true;
+      status.textContent = "Đang gửi lời chúc...";
+      status.hidden = false;
+      sendToSheet({
+        loai: "loi_chuc",
+        ho_ten: nameInput.value.trim(),
+        noi_dung: wishInput.value.trim()
+      }).then(function () {
+        status.textContent = "Lời chúc đã được gửi đi. Cảm ơn bạn!";
+        nameInput.value = "";
+        wishInput.value = "";
+      }).catch(function (error) {
+        console.error("Không gửi được lời chúc đến Google Sheets:", error);
+        status.textContent = "Gửi chưa thành công. Vui lòng kiểm tra kết nối và thử lại.";
+      }).then(function () {
+        form.dataset.sending = "false";
+        submit.disabled = false;
+      });
+    }, true);
   }
 
   initGallery();
   initGift();
   initCountdown();
   initRsvp();
+  initGuestbook();
 
   // Các khối không có sẵn lớp reveal trong bản lưu
   var extra = [];
