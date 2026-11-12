@@ -93,6 +93,13 @@
   <script>(function () { try { var k = "wedding-theme"; var t = localStorage.getItem(k); if (!t) { var o = localStorage.getItem("theme"); if (o === "light" || o === "dark") { t = o === "dark" ? "halloween" : "garden"; localStorage.setItem(k, t); localStorage.removeItem("theme") } } if (t) { document.documentElement.setAttribute("data-theme", t) } else if (window.matchMedia("(prefers-color-scheme: light)").matches) { document.documentElement.setAttribute("data-theme", "garden") } } catch (e) { } })();</script>
   <link rel="stylesheet" href="css/zoPxTpBuNVgf.css">
   <link rel="stylesheet" href="css/HYpj0dgI3tZ0.css">
+<style>
+  .pst-map-icon{display:inline-flex;align-items:center;justify-content:center;position:relative;width:44px;height:44px;border-radius:50%;background:#c5a165;box-shadow:0 0 0 0 rgba(197,161,101,.6);animation:map-ring 1.8s ease-out infinite}
+  .pst-map-icon svg{fill:#fff;animation:map-hop 1.8s ease-in-out infinite}
+  @keyframes map-ring{0%{box-shadow:0 0 0 0 rgba(197,161,101,.6)}70%,100%{box-shadow:0 0 0 16px rgba(197,161,101,0)}}
+  @keyframes map-hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @media(prefers-reduced-motion:reduce){.pst-map-icon,.pst-map-icon svg{animation:none}}
+</style>
 </head>
 
 <body>
@@ -216,7 +223,7 @@
                           style="font-family:'cormorant garamond', 'eb garamond', 'times new roman', serif">Nhà gái</p>
                         <p>Ông. <span dir="auto">Cao Xuân Ninh</span></p>
                         <p>Bà. <span dir="auto">Lê Thị Kim</span></p>
-                        <p class="mt-1 whitespace-pre-line text-[13px] italic"><span dir="auto">TDP Vinh Sơn, Phường Sầm Sơn, Thanh Hóa</span></p>
+                        <p class="mt-1 whitespace-pre-line text-[13px] italic"><span dir="auto">TDP Vinh Sơn, Phường Sầm Sơn, TỉnhThanh Hóa</span></p>
                       </div>
                     </div>
                   </div>
@@ -250,11 +257,11 @@
                   </div>
                   <div class="text-center"><a class="pst-reveal pst-map-btn mt-5"
                       href="https://maps.app.goo.gl/yKudpDH2sNh4cW1z9"
-                      target="_blank" rel="noopener noreferrer"><svg width="22" height="22" viewBox="0 0 16 16"
+                      target="_blank" rel="noopener noreferrer"><span class="pst-map-icon"><svg width="22" height="22" viewBox="0 0 16 16"
                         fill="#c5a165" aria-hidden="true">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6">
                         </path>
-                      </svg><span dir="auto">Chỉ đường</span></a></div>
+                                            </svg></span><span dir="auto">Bấm để xem chỉ đường</span></a></div>
                 </div><img src="images/VuGTWOgq3Miv.webp" alt="" aria-hidden="true" loading="lazy"
                   class="pst-sway pointer-events-none absolute -bottom-[60px] -left-[7%] w-[40%] max-w-[190px]">
               </div>
@@ -347,7 +354,7 @@
                 class="pst-float pointer-events-none absolute left-[6%] top-[30%] w-[36px]"><img
                 src="images/W3GrB74GBH21.webp" alt="" aria-hidden="true" loading="lazy"
                 class="pst-float pointer-events-none absolute left-[3%] top-[58%] w-[30px]" style="animation-delay:-3s">
-              <div class="pst-reveal relative mx-auto w-[82%] max-w-[380px]">
+              <div class="pst-reveal relative mx-auto w-[82%] max-w-[380px]" style="left:4%">
                 <div class="relative aspect-[780/887]"><img src="images/Jnlm1dbZFNQk.webp" alt="" aria-hidden="true"
                     loading="lazy" class="absolute inset-0 h-full w-full">
                   <div class="pst-photo absolute left-[10.1%] top-[6.3%] h-[60.2%] w-[71%] !rounded-none"><img
@@ -433,7 +440,7 @@
                     </div>
                   </li>
                   <li class="relative grid grid-cols-[64%_1fr] items-center">
-                    <div class="flex justify-end pr-[9%]"><img src="images/WNTdQ2yPN0CD.webp"
+                    <div class="flex justify-end pr-[9%]"><img src="images/UgnAVZYpSIUz.webp"
                         alt="" aria-hidden="true" loading="lazy"
                         class="h-[58px] w-[64px] object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]"></div><img
                       src="images/W3GrB74GBH21.webp" alt="" aria-hidden="true" loading="lazy"
@@ -752,9 +759,9 @@
 
       var autoScrollStarted = false;
       var SPEED = 40;      // px mỗi giây
-      var IDLE_MS = 5000;  // dừng bao lâu sau khi người dùng chạm vào thì cuộn tiếp
+      var IDLE_MS = 20000;  // dừng bao lâu sau khi người dùng chạm vào thì cuộn tiếp
       function startAutoScroll() {
-        var lastInteract = 0, pos = window.scrollY, last = null;
+        var lastInteract = -Infinity, pos = window.scrollY, last = null;
         ['wheel', 'touchstart', 'mousedown', 'keydown'].forEach(function (ev) {
           window.addEventListener(ev, function () { lastInteract = performance.now(); }, { passive: true });
         });

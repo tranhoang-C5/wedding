@@ -217,8 +217,8 @@
       '<label class="rsvp-name">Tên của bạn<input name="guestName" type="text" autocomplete="off" maxlength="120" placeholder="Nhập tên của bạn" required></label>' +
       '<label class="rsvp-name">Số người tham dự<input name="attendeeCount" type="number" min="1" step="1" value="1" required></label>' +
       '<fieldset style="border:0;margin:0;padding:0"><legend class="rsvp-legend">Bạn sẽ đến chứ?</legend>' +
-      '<label class="rsvp-choice"><input type="radio" name="attendance" value="yes" checked><span class="rsvp-choice-icon" aria-hidden="true">✓</span><span>Tôi sẽ đến</span></label>' +
-      '<label class="rsvp-choice"><input type="radio" name="attendance" value="no"><span class="rsvp-choice-icon" aria-hidden="true">×</span><span>Rất tiếc, tôi không thể đến</span></label>' +
+      '<label class="rsvp-choice"><input type="radio" name="attendance" value="yes"><span class="rsvp-choice-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span>Tôi sẽ đến</span></label>' +
+      '<label class="rsvp-choice"><input type="radio" name="attendance" value="no"><span class="rsvp-choice-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span><span>Rất tiếc, tôi không thể đến</span></label>' +
       '</fieldset>' +
       '<button class="rsvp-submit" type="submit" disabled>Gửi xác nhận</button>' +
       '<p class="rsvp-status" role="status" aria-live="polite" hidden></p>' +
@@ -231,17 +231,19 @@
     var submit = form.querySelector(".rsvp-submit");
     var status = dialog.querySelector(".rsvp-status");
     function updateSubmitState() {
-      var attending = form.querySelector('input[name="attendance"]:checked').value === "yes";
+      var choice = form.querySelector('input[name="attendance"]:checked');
+      var attending = !!choice && choice.value === "yes";
       countInput.disabled = !attending;
+      countInput.parentElement.style.display = attending ? "" : "none";
       var count = Number(countInput.value);
-      submit.disabled = nameInput.value.trim().length === 0 ||
+      submit.disabled = !choice || nameInput.value.trim().length === 0 ||
         (attending && (!Number.isInteger(count) || count < 1));
     }
     trigger.addEventListener("click", function () {
       form.reset();
       nameInput.value = "";
       countInput.value = "1";
-      form.querySelector('input[value="yes"]').checked = true;
+      form.querySelector('input[value="yes"]').checked = false;
       updateSubmitState();
       status.hidden = true;
       if (!dialog.open) dialog.showModal();
@@ -271,7 +273,7 @@
         form.reset();
         nameInput.value = "";
         countInput.value = "1";
-        form.querySelector('input[value="yes"]').checked = true;
+        form.querySelector('input[value="yes"]').checked = false;
         updateSubmitState();
       }).catch(function (error) {
         console.error("Không gửi được xác nhận đến Google Sheets:", error);
