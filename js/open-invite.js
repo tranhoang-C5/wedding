@@ -140,13 +140,24 @@
         '<div style="width:min(160px,100%);aspect-ratio:1;margin:0 auto;border-radius:16px;border:2px solid #eee;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;background:#fff"><img src="' + g.qr + '" alt="QR ' + g.who + '" style="width:82%;height:82%;object-fit:contain"></div>' +
         '<div style="font-size:10px;margin-top:12px">' + g.bank + '</div><div style="font-size:10px;margin-top:2px;letter-spacing:.05em">' + g.number + '</div>' +
         '<div style="font-size:11px;font-weight:600;margin-top:4px">' + g.name + '</div>' +
-        '<a href="' + g.qr + '" download="' + g.qr.split("/").pop() + '" style="display:inline-block;margin-top:10px;background:#f1ece6;color:' + ACCENT + ';border-radius:999px;padding:6px 14px;font-size:11px;text-decoration:none">⭳ Lưu QR</a></div>';
+        '<a data-save-qr href="' + g.qr + '" download="' + g.qr.split("/").pop() + '" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:#f1ece6;color:' + ACCENT + ';border-radius:999px;padding:6px 14px;font-size:11px;text-decoration:none"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8m0 0L4.5 6.5M8 10l3.5-3.5M2.5 13.5h11"/></svg>Lưu QR</a></div>';
     });
     html += "</div>";
     dlg.innerHTML = html;
     document.body.appendChild(dlg);
     gbtn.addEventListener("click", function () { if (!dlg.open) dlg.showModal(); });
     dlg.addEventListener("click", function (e) {
+      var save = e.target.closest && e.target.closest("[data-save-qr]");
+      if (save && navigator.share && navigator.canShare) {
+        // iOS bỏ qua thuộc tính download nên dùng bảng chia sẻ để lưu ảnh
+        e.preventDefault();
+        fetch(save.getAttribute("href")).then(function (r) { return r.blob(); }).then(function (blob) {
+          var file = new File([blob], save.getAttribute("download"), { type: blob.type || "image/png" });
+          if (navigator.canShare({ files: [file] })) return navigator.share({ files: [file] });
+          window.open(save.href, "_blank");
+        }).catch(function () {});
+        return;
+      }
       if (e.target === dlg || e.target.hasAttribute("data-close")) dlg.close();
     });
   }
